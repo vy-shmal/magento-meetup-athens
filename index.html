@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/beige.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">               
+			<div class="slides">
+                <section data-background="images/background.jpg">  
+                    <img style="width: 400px; border:none;" src="/images/magento2.png" alt="magneto 2">                  
+                    <h2>What are Plugins in M2 and how to use them</h2>                    
+                </section>                
+				<section>
+					<h1>Who am I?</h1>
+					<img style="width: 130px; border:none;" src="/images/slavik.jpg" alt="">
+                    <h2>Vyacheslav Shmal</h2>
+                    <p>Backend Senior Developer @ <a href="https://www.webo2.gr">WebO2</a></p>        
+                    <p>Magento 1 Certified soon Magento 2 </p>
+                </section>
+				<section data-background="/images/gifs/dontknow.gif">
+					<h2 style="color: #fff">What are Plugins? </h2>
+				</section>
+				<section>
+					<p>A <b>plugin</b>, or <b>interceptor</b>, is a class that modifies the behavior of <b>public</b> class 
+						functions by intercepting a function call and running code <b>before</b>, <b>after</b>, or <b>around</b> that function call. 
+					</p>
+					<p>This allows you to substitute or extend the behavior of original, public methods for any <b>class</b> or <b>interface</b>.</p>
+				</section>
+				<section data-background="/images/gifs/why2.gif">
+					<h2 style="color:#fff">Why we use plugins ?</h2>
+				</section>
+				<section>
+					<h2>Price sort on the search</h2>
+					<img src="/images/search.png" alt="">
+				</section>
+				<section>
+					<p>Magento\CatalogSearch\Block\Result</p>
+					<img src="/images/listOrders.png" alt="">
+				</section>
+				<section>
+					<h2>Plugin Implementation</h2>
+					<img src="/images/listOrderPlugin.png" alt="">
+				</section>
+				<section>
+					<h3>What was before plugins on magneto 1 ?</h3>
+					<p>config.xml</p>
+					<pre style="box-shadow:none;">
+						<code class="hljs">					
+<models>
+ <customer>
+   <rewrite>
+     <product>Vendor_Module_Model_Custom</product>
+   </rewrite>
+ </customer>
+</models>
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h3>Class rewrite conflict!</h3>
+					<img src="/images/rewriteConflict.png" alt="">
+				</section>
+				<section data-background="/images/gifs/nono.gif">
+
+				</section>
+				<section  id="fragments">
+					<h2>What types are there ?</h2>
+						<ul>
+							<li class="fragment fade-up">Before</li>
+							<li class="fragment fade-up">After</li>
+							<li class="fragment fade-up">Around</li>
+						</ul>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+        </script>
+        <style>
+            .footer {
+                position: absolute;
+                bottom: 20px;
+                left: 50%;               
+                transform: translate(-50%);
+                display: flex;
+                align-items: center;
+                font-family: "Lato", sans-serif;
+                font-size: 16px;
+                font-weight: normal;
+                color: #333;
+
+                
+            }
+
+            .footer span {
+                margin-left: 20px;
+            }
+
+            #logo{
+                width: 70px;               
+                height: 100%;                
+            }
+        </style>
+        <div class="footer">
+                <img id="logo" src="/images/webΟ2_logo.svg" alt="GitHub logo with Octocat">
+                <span> Vyacheslav Shmal </span> 
+                <span>What are Plugins in M2 and how to use them</span>
+        </div>        
+	</body>
+</html>
