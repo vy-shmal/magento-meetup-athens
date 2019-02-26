@@ -29,12 +29,22 @@
                     <h2>What are Plugins in M2 and how to use them</h2>                    
                 </section>                
 				<section>
-					<h1>Who am I?</h1>
+					<h2>Who am I?</h1>
 					<img style="width: 130px; border:none;" src="/images/slavik.jpg" alt="">
                     <h2>Vyacheslav Shmal</h2>
                     <p>Backend Senior Developer @ <a href="https://www.webo2.gr">WebO2</a></p>        
                     <p>Magento 1 Certified soon Magento 2 </p>
-                </section>
+				</section>
+				<section>
+					<h2 >What we will be talking about ? </h2>
+					<ul>
+						<li>What are the Plugins in Magento 2</li>
+						<li>Why we use them?</li>
+						<li>What was before Plugins?</li>
+						<li>Types of Plugins</li>
+						<li>Implementation</li>
+					</ul>
+				</section>
 				<section data-background="/images/gifs/dontknow.gif">
 					<h2 style="color: #fff">What are Plugins? </h2>
 				</section>
@@ -89,6 +99,140 @@
 							<li class="fragment fade-up">Around</li>
 						</ul>
 				</section>
+				<section>
+					<h2>Declaring a plugin</h2>
+					<p>The di.xml file in your module declares a plugin for a class object</p>
+					<img src="/images/declare.png" alt="">
+				</section>
+				<section>
+					<h2>Before method</h2>
+					<p>Magento runs all before methods ahead of the call to an observed method. These methods must have the same name as the observed method with ‘before’ as the prefix.</p>
+				</section>
+				<section>
+					<p>Below is an example of a before method modifying the $name argument before passing it on to the observed setName method.</p>
+					<pre style="box-shadow:none;">
+						<code class="hljs" >
+namespace My\Module\Plugin;
+
+class ProductAttributesUpdater
+{
+    public function beforeSetName(
+		\Magento\Catalog\Model\Product $subject, 
+		$name
+	)
+    {
+        return ['(' . $name . ')'];
+    }
+}
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>Tip</h2>
+					<p>If there is <b>more than one argument</b>, the method should return an <b>array of those arguments</b>. If the method does not change the argument for the observed method, it should return <b>null</b>.</p>
+				</section>
+				<section id="fragments">
+					<h2>After methods</h2>
+					<p>Magento runs all after methods following the completion of the observed method.</p>
+					<br/>
+					<p  class="fragment fade-up">Magento requires these methods have a return value</p>
+					<p  class="fragment fade-up">They must have the same name as the observed method with ‘after’ as the prefix.</p>			
+					
+				</section>
+				<section>
+					<p>You can use these methods to change the result of an observed method by modifying the original result and returning it at the end of the method.</p>
+					<pre style="box-shadow:none;">
+						<code class="hljs" >
+namespace My\Module\Plugin;
+
+class ProductAttributesUpdater
+{
+	public function afterGetName(
+		\Magento\Catalog\Model\Product $subject,
+		 $result
+		)
+	{
+		return '|' . $result . '|';
+	}
+}						
+						</code>
+					</pre>
+				</section>
+				<section id="fragments">
+					<h2>Tips</h2>
+					<p class="fragment fade-up">After methods have access to all the arguments of their observed methods. </p>
+					<p class="fragment fade-up">After methods do not need to declare all the arguments of their observed methods</p>
+					<p class="fragment fade-up">except those that the method uses and any arguments from the observed method that come before those used arguments.</p>
+				</section>
+				<section>
+					<p> \Magento\Catalog\Model\Product\Action:: updateWebsites($productIds, $websiteIds, $type)</p>
+					<pre  style="box-shadow:none;">
+						<code class="hljs">
+public function afterUpdateWebsites(
+	\Magento\Catalog\Model\Product\Action $subject, 
+	$result, 
+	$productIds, 
+	$websiteIds
+)
+{
+	$this->logger->log(
+		'Updated websites: ' . implode(', ',  $websiteIds)
+		);
+}
+						</code>
+					</pre>
+				</section>
+				<section id="fragments">
+					<h2>Around methods</h2>
+					<p class="fragment fade-up">Magento runs the code in around methods before and after their observed methods.</p>
+					<p class="fragment fade-up">Using these methods allow you to override an observed method.</p>
+					<p class="fragment fade-up">Around methods must have the same name as the observed method with ‘around’ as the prefix.</p>
+				</section>
+				<section id="fragments">
+					<h2>When not to use!</h2>
+					<p class="fragment fade-up">Avoid using around method plugins when they are not required because they increase stack traces and affect performance.</p>
+				</section>
+				<section id="fragments">
+					<h2>When to use Around methods</h2>
+					<ul>
+						<li><p class="fragment fade-up">The only use case for around method plugins is when the execution of all further plugins and original methods need termination.</p></li>				
+						<li><p class="fragment fade-up">Use after method plugins if you require arguments for replacing or altering function results.</p></li>
+					</ul>
+				</section>
+				<section>
+					<img src="/images/aroundSave.png" alt="">
+				</section>
+				<section>
+					<p>When you wrap a method which accepts arguments, your plugin must also accept those arguments and you must forward them when you invoke the proceed callable. 
+						You must be careful to match the default parameters and type hints of the original signature of the method.</p>
+				</section>
+				<section>
+					<h2>Prioritizing plugins</h2>
+					<p>The sortOrder property for plugins determine when their before, after, or around methods get called when more than one plugins are observing the same method.</p>
+					<img src="/images/plugin.png" alt="">
+				</section>
+				<section>
+					<img src="/images/priority.png" alt="">
+				</section>
+				<section id="fragments">
+					<h2>Limitations</h2>
+					<p>Plugins can not be used on following:</p>
+					<ul>
+						<li class="fragment fade-up">Final methods</li>
+						<li class="fragment fade-up">Final classes</li>
+						<li class="fragment fade-up">Non-public methods</li>
+						<li class="fragment fade-up">Class methods (such as static methods)</li>
+						<li class="fragment fade-up">__construct</li>
+						<li class="fragment fade-up">Virtual types</li>
+						<li class="fragment fade-up">Objects that are instantiated before Magento\Framework\Interception is bootstrapped</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Demo</h2>
+				</section>
+				<section>
+					<h2>Q & A</h2>
+				</section>
 			</div>
 		</div>
 
@@ -104,7 +248,8 @@
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
 					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true }
 				]
 			});
         </script>
